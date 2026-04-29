@@ -1,0 +1,424 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sandwich Build Trainer</title>
+
+<style>
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f4f4;
+  margin:0;
+  color:#111;
+}
+header{
+  background:#111;
+  color:white;
+  text-align:center;
+  padding:16px;
+}
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:14px;
+}
+.card{
+  background:white;
+  border-radius:10px;
+  padding:14px;
+  margin:12px 0;
+  border:1px solid #ddd;
+}
+button{
+  padding:10px 12px;
+  margin:5px;
+  border:1px solid #bbb;
+  border-radius:8px;
+  background:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.selected{
+  background:#111;
+  color:white;
+}
+.primary{
+  background:#111;
+  color:white;
+}
+.good{
+  color:green;
+  font-weight:bold;
+  font-size:20px;
+}
+.bad{
+  color:red;
+  font-weight:bold;
+  font-size:20px;
+}
+.pill{
+  display:inline-block;
+  background:#eee;
+  border-radius:999px;
+  padding:6px 10px;
+  margin:4px;
+}
+#question{
+  font-size:26px;
+  font-weight:bold;
+}
+select{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #bbb;
+  max-width:100%;
+}
+.study-item{
+  border-bottom:1px solid #ddd;
+  padding:8px 0;
+}
+.small{
+  color:#666;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body onload="startGame()">
+
+<header>
+  <h2>Sandwich Build Trainer</h2>
+  <p>Choose every ingredient that belongs on the sandwich.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <button class="primary" onclick="newQuestion()">Random Sandwich</button>
+    <button onclick="checkAnswer()">Check</button>
+    <button onclick="showAnswer()">Show Answer</button>
+  </div>
+
+  <div class="card">
+    <label><b>Or choose a sandwich:</b></label><br><br>
+    <select id="sandwichSelect" onchange="chooseSandwich()">
+      <option value="">Select one...</option>
+      <option value="THE PEPE #1">THE PEPE #1</option>
+      <option value="BIG JOHN #2">BIG JOHN #2</option>
+      <option value="TOTALLY TUNA #3">TOTALLY TUNA #3</option>
+      <option value="TURKEY TOM #4">TURKEY TOM #4</option>
+      <option value="VITO #5">VITO #5</option>
+      <option value="THE VEGGIE #6">THE VEGGIE #6</option>
+      <option value="SPICY EAST COAST ITALIAN #7">SPICY EAST COAST ITALIAN #7</option>
+      <option value="BILLY CLUB #8">BILLY CLUB #8</option>
+      <option value="ITALIAN NIGHT CLUB #9">ITALIAN NIGHT CLUB #9</option>
+      <option value="HUNTER'S CLUB #10">HUNTER'S CLUB #10</option>
+      <option value="COUNTRY CLUB #11">COUNTRY CLUB #11</option>
+      <option value="BEACH CLUB #12">BEACH CLUB #12</option>
+      <option value="JIMMY CUBANO #13">JIMMY CUBANO #13</option>
+      <option value="BOOTLEGGER CLUB #14">BOOTLEGGER CLUB #14</option>
+      <option value="CLUB TUNA #15">CLUB TUNA #15</option>
+      <option value="CLUB LULU #16">CLUB LULU #16</option>
+      <option value="ULTIMATE PORKER #17">ULTIMATE PORKER #17</option>
+      <option value="J.J.B.L.T.">J.J.B.L.T.</option>
+      <option value="THE J.J. GARGANTUAN">THE J.J. GARGANTUAN</option>
+      <option value="CHICKEN BACON RANCH">CHICKEN BACON RANCH</option>
+      <option value="ROAST BEEF & CHEDDAR">ROAST BEEF & CHEDDAR</option>
+      <option value="ULTIMATE ITALIAN">ULTIMATE ITALIAN</option>
+      <option value="TUSCAN ITALIAN WRAP">TUSCAN ITALIAN WRAP</option>
+      <option value="CHICKEN CAESAR WRAP">CHICKEN CAESAR WRAP</option>
+      <option value="KICKIN RANCH CHICKEN WRAP">KICKIN RANCH CHICKEN WRAP</option>
+      <option value="SLIM 1">SLIM 1</option>
+      <option value="SLIM 2">SLIM 2</option>
+      <option value="SLIM 3">SLIM 3</option>
+      <option value="SLIM 4">SLIM 4</option>
+      <option value="SLIM 5">SLIM 5</option>
+      <option value="SLIM 6">SLIM 6</option>
+      <option value="SLIM BACON">SLIM BACON</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div id="question">Loading sandwich...</div>
+    <p class="small">Tap ingredients to select or unselect them.</p>
+    <div id="choices"></div>
+    <div id="result"></div>
+    <div id="answer"></div>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary><b>Hardcoded Study List</b></summary>
+
+      <div class="study-item"><b>THE PEPE #1</b><br>mayo, tomato, lettuce, provolone, ham</div>
+      <div class="study-item"><b>BIG JOHN #2</b><br>mayo, tomato, lettuce, roast beef</div>
+      <div class="study-item"><b>TOTALLY TUNA #3</b><br>tomato, cucumber, lettuce, tuna</div>
+      <div class="study-item"><b>TURKEY TOM #4</b><br>mayo, tomato, lettuce, turkey</div>
+      <div class="study-item"><b>VITO #5</b><br>tomato, onion, lettuce, oregano-basil, provolone, vito</div>
+      <div class="study-item"><b>THE VEGGIE #6</b><br>mayo, tomato, cucumber, lettuce, provolone, avocado</div>
+
+      <div class="study-item"><b>SPICY EAST COAST ITALIAN #7</b><br>mayo, tomato, peppers, onion, lettuce, oregano-basil, provolone, vito</div>
+      <div class="study-item"><b>BILLY CLUB #8</b><br>mayo, tomato, lettuce, provolone, roast beef, yellow mustard, ham</div>
+      <div class="study-item"><b>ITALIAN NIGHT CLUB #9</b><br>mayo, tomato, onion, lettuce, oregano-basil, provolone, vito, ham</div>
+      <div class="study-item"><b>HUNTER'S CLUB #10</b><br>mayo, tomato, lettuce, provolone, roast beef</div>
+      <div class="study-item"><b>COUNTRY CLUB #11</b><br>mayo, tomato, lettuce, provolone, turkey, ham</div>
+      <div class="study-item"><b>BEACH CLUB #12</b><br>mayo, tomato, cucumber, lettuce, provolone, avocado, turkey</div>
+      <div class="study-item"><b>JIMMY CUBANO #13</b><br>mayo, pickle, provolone, ham, bacon</div>
+      <div class="study-item"><b>BOOTLEGGER CLUB #14</b><br>mayo, tomato, lettuce, roast beef, turkey</div>
+      <div class="study-item"><b>CLUB TUNA #15</b><br>tomato, cucumber, lettuce, tuna, provolone</div>
+      <div class="study-item"><b>CLUB LULU #16</b><br>mayo, tomato, lettuce, turkey, bacon</div>
+      <div class="study-item"><b>ULTIMATE PORKER #17</b><br>mayo, tomato, lettuce, ham, bacon</div>
+      <div class="study-item"><b>J.J.B.L.T.</b><br>mayo, tomato, lettuce, bacon</div>
+      <div class="study-item"><b>THE J.J. GARGANTUAN</b><br>mayo, tomato, onion, lettuce, oregano-basil, provolone, vito, roast beef, turkey, ham</div>
+
+      <div class="study-item"><b>CHICKEN BACON RANCH</b><br>mayo, chicken, provolone, bacon, tomato, onion, lettuce, ranch</div>
+      <div class="study-item"><b>ROAST BEEF & CHEDDAR</b><br>mayo, roast beef, cheddar cheese, tomato, onion, EZ lettuce, crispy onions, horseradish sauce</div>
+      <div class="study-item"><b>ULTIMATE ITALIAN</b><br>mayo, vito, ham, parmesan, provolone, bacon, tomato, onion, lettuce, oregano-basil</div>
+
+      <div class="study-item"><b>TUSCAN ITALIAN WRAP</b><br>garlic herb wrap, mayo, vito, ham, tomato, EZ onion, lettuce, parmesan, oregano-basil</div>
+      <div class="study-item"><b>CHICKEN CAESAR WRAP</b><br>garlic herb wrap, mayo, tomato, lettuce, parmesan, croutons, caesar dressing, chicken</div>
+      <div class="study-item"><b>KICKIN RANCH CHICKEN WRAP</b><br>flour wrap, mayo, provolone, tomato, peppers, onion, lettuce, red pepper flakes, kickin ranch, chicken</div>
+
+      <div class="study-item"><b>SLIM 1</b><br>provolone, ham</div>
+      <div class="study-item"><b>SLIM 2</b><br>roast beef</div>
+      <div class="study-item"><b>SLIM 3</b><br>tuna</div>
+      <div class="study-item"><b>SLIM 4</b><br>turkey</div>
+      <div class="study-item"><b>SLIM 5</b><br>provolone, vito</div>
+      <div class="study-item"><b>SLIM 6</b><br>provolone</div>
+      <div class="study-item"><b>SLIM BACON</b><br>bacon</div>
+
+    </details>
+  </div>
+
+</div>
+
+<script>
+var sandwichNames = [
+"THE PEPE #1",
+"BIG JOHN #2",
+"TOTALLY TUNA #3",
+"TURKEY TOM #4",
+"VITO #5",
+"THE VEGGIE #6",
+"SPICY EAST COAST ITALIAN #7",
+"BILLY CLUB #8",
+"ITALIAN NIGHT CLUB #9",
+"HUNTER'S CLUB #10",
+"COUNTRY CLUB #11",
+"BEACH CLUB #12",
+"JIMMY CUBANO #13",
+"BOOTLEGGER CLUB #14",
+"CLUB TUNA #15",
+"CLUB LULU #16",
+"ULTIMATE PORKER #17",
+"J.J.B.L.T.",
+"THE J.J. GARGANTUAN",
+"CHICKEN BACON RANCH",
+"ROAST BEEF & CHEDDAR",
+"ULTIMATE ITALIAN",
+"TUSCAN ITALIAN WRAP",
+"CHICKEN CAESAR WRAP",
+"KICKIN RANCH CHICKEN WRAP",
+"SLIM 1",
+"SLIM 2",
+"SLIM 3",
+"SLIM 4",
+"SLIM 5",
+"SLIM 6",
+"SLIM BACON"
+];
+
+var builds = {
+"THE PEPE #1":["mayo","tomato","lettuce","provolone","ham"],
+"BIG JOHN #2":["mayo","tomato","lettuce","roast beef"],
+"TOTALLY TUNA #3":["tomato","cucumber","lettuce","tuna"],
+"TURKEY TOM #4":["mayo","tomato","lettuce","turkey"],
+"VITO #5":["tomato","onion","lettuce","oregano-basil","provolone","vito"],
+"THE VEGGIE #6":["mayo","tomato","cucumber","lettuce","provolone","avocado"],
+
+"SPICY EAST COAST ITALIAN #7":["mayo","tomato","peppers","onion","lettuce","oregano-basil","provolone","vito"],
+"BILLY CLUB #8":["mayo","tomato","lettuce","provolone","roast beef","yellow mustard","ham"],
+"ITALIAN NIGHT CLUB #9":["mayo","tomato","onion","lettuce","oregano-basil","provolone","vito","ham"],
+"HUNTER'S CLUB #10":["mayo","tomato","lettuce","provolone","roast beef"],
+"COUNTRY CLUB #11":["mayo","tomato","lettuce","provolone","turkey","ham"],
+"BEACH CLUB #12":["mayo","tomato","cucumber","lettuce","provolone","avocado","turkey"],
+"JIMMY CUBANO #13":["mayo","pickle","provolone","ham","bacon"],
+"BOOTLEGGER CLUB #14":["mayo","tomato","lettuce","roast beef","turkey"],
+"CLUB TUNA #15":["tomato","cucumber","lettuce","tuna","provolone"],
+"CLUB LULU #16":["mayo","tomato","lettuce","turkey","bacon"],
+"ULTIMATE PORKER #17":["mayo","tomato","lettuce","ham","bacon"],
+"J.J.B.L.T.":["mayo","tomato","lettuce","bacon"],
+"THE J.J. GARGANTUAN":["mayo","tomato","onion","lettuce","oregano-basil","provolone","vito","roast beef","turkey","ham"],
+
+"CHICKEN BACON RANCH":["mayo","chicken","provolone","bacon","tomato","onion","lettuce","ranch"],
+"ROAST BEEF & CHEDDAR":["mayo","roast beef","cheddar cheese","tomato","onion","EZ lettuce","crispy onions","horseradish sauce"],
+"ULTIMATE ITALIAN":["mayo","vito","ham","parmesan","provolone","bacon","tomato","onion","lettuce","oregano-basil"],
+
+"TUSCAN ITALIAN WRAP":["garlic herb wrap","mayo","vito","ham","tomato","EZ onion","lettuce","parmesan","oregano-basil"],
+"CHICKEN CAESAR WRAP":["garlic herb wrap","mayo","tomato","lettuce","parmesan","croutons","caesar dressing","chicken"],
+"KICKIN RANCH CHICKEN WRAP":["flour wrap","mayo","provolone","tomato","peppers","onion","lettuce","red pepper flakes","kickin ranch","chicken"],
+
+"SLIM 1":["provolone","ham"],
+"SLIM 2":["roast beef"],
+"SLIM 3":["tuna"],
+"SLIM 4":["turkey"],
+"SLIM 5":["provolone","vito"],
+"SLIM 6":["provolone"],
+"SLIM BACON":["bacon"]
+};
+
+var allIngredients = [
+"mayo",
+"tomato",
+"lettuce",
+"provolone",
+"ham",
+"roast beef",
+"cucumber",
+"tuna",
+"turkey",
+"onion",
+"oregano-basil",
+"vito",
+"avocado",
+"peppers",
+"yellow mustard",
+"pickle",
+"bacon",
+"chicken",
+"ranch",
+"cheddar cheese",
+"EZ lettuce",
+"crispy onions",
+"horseradish sauce",
+"parmesan",
+"garlic herb wrap",
+"flour wrap",
+"EZ onion",
+"croutons",
+"caesar dressing",
+"red pepper flakes",
+"kickin ranch"
+];
+
+var currentName = "";
+var currentBuild = [];
+var selected = [];
+
+function startGame(){
+  newQuestion();
+}
+
+function newQuestion(){
+  var index = Math.floor(Math.random() * sandwichNames.length);
+  currentName = sandwichNames[index];
+  currentBuild = builds[currentName];
+  document.getElementById("sandwichSelect").value = currentName;
+  renderQuestion();
+}
+
+function chooseSandwich(){
+  var selectedName = document.getElementById("sandwichSelect").value;
+  if(selectedName === ""){ return; }
+  currentName = selectedName;
+  currentBuild = builds[currentName];
+  renderQuestion();
+}
+
+function renderQuestion(){
+  selected = [];
+  document.getElementById("question").innerHTML = currentName;
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("answer").innerHTML = "";
+
+  var options = makeUnique(currentBuild.concat(allIngredients));
+  options = shuffle(options);
+
+  var output = "";
+  for(var i = 0; i < options.length; i++){
+    output += '<button onclick="toggleChoice(this)" data-value="' + escapeHtml(options[i]) + '">' + escapeHtml(options[i]) + '</button>';
+  }
+
+  document.getElementById("choices").innerHTML = output;
+}
+
+function toggleChoice(button){
+  var item = button.getAttribute("data-value");
+
+  if(arrayContains(selected, item)){
+    selected = removeItem(selected, item);
+    button.className = "";
+  } else {
+    selected.push(item);
+    button.className = "selected";
+  }
+}
+
+function checkAnswer(){
+  if(sortJoin(selected) === sortJoin(currentBuild)){
+    document.getElementById("result").innerHTML = '<div class="good">Correct</div>';
+  } else {
+    document.getElementById("result").innerHTML = '<div class="bad">Incorrect</div>';
+    showAnswer();
+  }
+}
+
+function showAnswer(){
+  var output = "<p><b>Answer:</b> " + escapeHtml(currentName) + "</p>";
+  for(var i = 0; i < currentBuild.length; i++){
+    output += '<span class="pill">' + escapeHtml(currentBuild[i]) + '</span>';
+  }
+  document.getElementById("answer").innerHTML = output;
+}
+
+function arrayContains(arr, item){
+  for(var i = 0; i < arr.length; i++){
+    if(arr[i] === item){ return true; }
+  }
+  return false;
+}
+
+function removeItem(arr, item){
+  var next = [];
+  for(var i = 0; i < arr.length; i++){
+    if(arr[i] !== item){ next.push(arr[i]); }
+  }
+  return next;
+}
+
+function makeUnique(arr){
+  var next = [];
+  for(var i = 0; i < arr.length; i++){
+    if(!arrayContains(next, arr[i])){ next.push(arr[i]); }
+  }
+  return next;
+}
+
+function shuffle(arr){
+  var copy = arr.slice();
+  for(var i = copy.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = copy[i];
+    copy[i] = copy[j];
+    copy[j] = temp;
+  }
+  return copy;
+}
+
+function sortJoin(arr){
+  return arr.slice().sort().join("|");
+}
+
+function escapeHtml(text){
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+</script>
+
+</body>
+</html>
